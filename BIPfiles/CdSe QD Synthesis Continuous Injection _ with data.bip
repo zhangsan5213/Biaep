@@ -1,0 +1,110 @@
+biaep@0.1.0
+{
+	"name": "CdSe Synthesis via Continuous Injection",
+	"author": "Yanheng Xu",
+	"signature": "",
+	//A hash code for Yanheng's public key
+
+	"requirement": {
+		// Devices that must be involved.
+		// This is to be checked by the AEP for mecessary components.
+		// BIP file does not contain communication protocal amongst devices.
+		"robot arm": True,
+		"solid feeding": True,
+		"liquid preparation": True,
+		"chemBox": True,
+		"gas supplier": True,
+		"gas treatment": True,
+		"syringe pump": True,
+		"peristaltic pump": True,
+		"cooling": True,
+		"Absorption Spectroscopy": True,
+	},
+
+	"chemicals": {
+		// Chemicals involved.
+		"solid": {
+			// Amount denoted in milligrams (mg).
+			"CdO": 384,
+			"Se": 56.88,
+			"Steric Acid": 344,
+		},
+		"liquid": {
+			// Amount denoted in milliliters (mL).
+			"ODE": 11,
+		}
+
+	},
+
+	"preparation": {
+		// Preparation of precursor solutions if any.
+		"Se-ODE": {
+			"type": "liquid",
+			"reagent": {
+				"Se": 56.88,
+				"ODE": 7,
+			}
+		}
+	},
+
+	"operations": {
+		// Opertions, including type, time, reagents etc.
+		"01": {
+			"operation": "+",
+			"reagents": {
+				"CdO": 384,
+				"Steric Acid": 344,
+				"ODE": 4,
+			}
+		},
+		"02": {
+			"operation": "x",
+			"gas treatment": {
+				"gas": "Ar",
+				"time": {
+					"monitor": "chemBox",
+					"factor": "color",
+					"feature": "colorless",
+					"terminate": 600, // In seconds (s).
+				},
+				"temperature": 250, // In degree Celsius (°C).
+				"stir": True,
+			}
+		},
+		"03": {
+			"operation": "x",
+			"heating": {
+				"temperature": 240,
+				"time": -1, // -1 means to keep this from now on.
+				"stir": True,
+			}
+		},
+		"04": {
+			"operation": "+",
+			"type": {
+				"linear"
+				"reagent": {"Se-ODE": 7},
+				"intercep": 0,
+				"time": 120,
+				// Finish this in 120 s.
+			}
+		}
+	},
+
+	"data collection": {
+		// Whose data of what and when it should be collected.
+		"AbsorptionSpectroscopy": {
+			"operationIndex": 4,
+			"time": Range(0, 120, 30),
+		}
+	}
+}
+{
+	"name": "FWHM of the absorption spectrum, QD size distribution";
+	"time": [0, 30, 60, 90, 120];
+	"AbsorptionSpectroscopy": {
+		"FWHM": [49.6, 40.5, 34.5, 31, 32.5];
+		// in nanometer (nm).
+	}
+
+}
